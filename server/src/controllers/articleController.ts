@@ -16,7 +16,7 @@ async function getArticles(
   const articles = await prisma.article.findMany({
     skip,
     take: limit,
-    include: { author: true }, // Include author information
+    include: { author: true },
   });
 
   reply.code(200).send(articles);
@@ -30,7 +30,7 @@ async function getArticleById(
 
   const article = await prisma.article.findUnique({
     where: { id: Number(id) },
-    include: { author: true, comments: true }, // Include author and comments
+    include: { author: true, comments: true },
   });
 
   if (!article) {
@@ -42,11 +42,11 @@ async function getArticleById(
 }
 
 async function createArticle(
-  req: FastifyRequest<{ Body: ArticleSchemaType; Params: IdSchemaType }>,
+  req: FastifyRequest<{ Body: ArticleSchemaType }>,
   reply: FastifyReply
 ) {
   const { title, text } = req.body;
-  const authorId = req.params.id;
+  const authorId = (req.user as any).id;
 
   const article = await prisma.article.create({
     data: { title, text, authorId },
@@ -63,11 +63,11 @@ async function updateArticle(
   reply: FastifyReply
 ) {
   const { id } = req.params;
-  const data = req.body;
+  const { title, text } = req.body;
 
   const article = await prisma.article.update({
     where: { id: Number(id) },
-    data,
+    data: { title, text },
   });
 
   reply.code(200).send(article);

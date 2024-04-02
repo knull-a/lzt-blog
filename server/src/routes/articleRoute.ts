@@ -7,6 +7,7 @@ import {
   getArticles,
   updateArticle,
 } from "../controllers/articleController";
+import { Type } from "@sinclair/typebox";
 
 async function articleRoute(
   fastify: FastifyInstance,
@@ -20,6 +21,7 @@ async function articleRoute(
           200: ArticleSchemaList,
         },
       },
+      preHandler: [fastify.authenticate],
     },
     getArticles
   );
@@ -33,20 +35,21 @@ async function articleRoute(
         },
         params: idSchema,
       },
+      preHandler: [fastify.authenticate],
     },
     getArticleById
   );
 
   fastify.post(
-    "/articles/:id",
+    "/articles",
     {
       schema: {
         body: ArticleSchema,
-        params: idSchema,
         response: {
           201: ArticleSchema,
         },
       },
+      preHandler: [fastify.authenticate],
     },
     createArticle
   );
@@ -55,12 +58,13 @@ async function articleRoute(
     "/articles/:id",
     {
       schema: {
-        body: ArticleSchema,
+        body: Type.Partial(ArticleSchema),
         params: idSchema,
         response: {
           201: ArticleSchema,
         },
       },
+      preHandler: [fastify.authenticate],
     },
     updateArticle
   );
