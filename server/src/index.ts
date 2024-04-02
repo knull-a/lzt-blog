@@ -1,6 +1,7 @@
-// Import the framework and instantiate it
 import Fastify from "fastify";
 import dotenv from "dotenv";
+import articleRoute from "./routes/articleRoute";
+
 
 dotenv.config();
 
@@ -10,9 +11,7 @@ const fastify = Fastify({
   logger: true,
 });
 
-fastify.get("/", async function handler(request, reply) {
-  return { hello: "world" };
-});
+fastify.register(articleRoute);
 
 try {
   fastify.listen({ port: Number(PORT) || 8000 });
