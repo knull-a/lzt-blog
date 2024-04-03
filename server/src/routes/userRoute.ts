@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyPluginOptions, FastifyRequest } from "fastify";
 import {
   UserSchema,
   UserSchemaDto,
@@ -15,9 +15,9 @@ import {
 } from "../controllers/userController";
 import { Type } from "@sinclair/typebox";
 
-async function userRoute(fastify: FastifyInstance) {
+async function userRoute(fastify: FastifyInstance, options: FastifyPluginOptions, path: string) {
   fastify.post(
-    "/users/register",
+    `${path}/register`,
     {
       schema: {
         body: UserSchemaDto,
@@ -31,7 +31,7 @@ async function userRoute(fastify: FastifyInstance) {
   );
 
   fastify.post(
-    "/users/login",
+    `${path}/login`,
     {
       schema: {
         body: UserSchema,
@@ -45,7 +45,7 @@ async function userRoute(fastify: FastifyInstance) {
   );
 
   fastify.post(
-    "/users/refresh",
+    `${path}/refresh`,
     {
       schema: {
         body: { refreshToken: Type.String() },
@@ -59,7 +59,7 @@ async function userRoute(fastify: FastifyInstance) {
   );
 
   fastify.get(
-    "/users/me",
+    `${path}/me`,
     {
       preHandler: [fastify.authenticate],
     },
@@ -67,7 +67,7 @@ async function userRoute(fastify: FastifyInstance) {
   );
 
   fastify.patch(
-    "/users/me",
+    `${path}/me`,
     {
       preHandler: [fastify.authenticate],
       schema: {

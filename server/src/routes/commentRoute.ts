@@ -1,15 +1,19 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { ArticleSchema, ArticleSchemaDto, ArticleSchemaList } from "../models/articleSchema";
+import {
+  CommentSchema,
+  CommentSchemaList,
+  CommentSchemaDto,
+} from "../models/commentSchema";
 import { idSchema } from "../models/idSchema";
 import {
-  createArticle,
-  getArticleById,
-  getArticles,
-  updateArticle,
-} from "../controllers/articleController";
+  createComment,
+  deleteComment,
+  getComments,
+  updateComment,
+} from "../controllers/commentController";
 import { Type } from "@sinclair/typebox";
 
-async function articleRoute(
+async function commentRoute(
   fastify: FastifyInstance,
   options: FastifyPluginOptions,
   path: string
@@ -19,56 +23,56 @@ async function articleRoute(
     {
       schema: {
         response: {
-          200: ArticleSchemaList,
+          200: CommentSchemaList,
         },
       },
       preHandler: [fastify.authenticate],
     },
-    getArticles
-  );
-
-  fastify.get(
-    `${path}/:id`,
-    {
-      schema: {
-        response: {
-          200: ArticleSchema,
-        },
-        params: idSchema,
-      },
-      preHandler: [fastify.authenticate],
-    },
-    getArticleById
+    getComments
   );
 
   fastify.post(
     path,
     {
       schema: {
-        body: ArticleSchemaDto,
+        body: CommentSchemaDto,
         response: {
-          201: ArticleSchemaDto,
+          201: CommentSchemaDto,
         },
       },
       preHandler: [fastify.authenticate],
     },
-    createArticle
+    createComment
   );
 
   fastify.patch(
     `${path}/:id`,
     {
       schema: {
-        body: Type.Partial(ArticleSchemaDto),
+        body: Type.Partial(CommentSchemaDto),
         params: idSchema,
         response: {
-          201: ArticleSchemaDto,
+          201: CommentSchemaDto,
         },
       },
       preHandler: [fastify.authenticate],
     },
-    updateArticle
+    updateComment
+  );
+
+  fastify.delete(
+    `${path}/:id`,
+    {
+      schema: {
+        params: idSchema,
+        response: {
+          200: Type.Object(Type.String()),
+        },
+      },
+      preHandler: [fastify.authenticate],
+    },
+    deleteComment
   );
 }
 
-export default articleRoute;
+export default commentRoute;

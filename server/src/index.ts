@@ -4,10 +4,11 @@ import ms from "ms";
 import articleRoute from "./routes/articleRoute";
 import jwt from "@fastify/jwt";
 import userRoute from "./routes/userRoute";
+import commentRoute from "./routes/commentRoute";
 
 declare module "fastify" {
   interface FastifyInstance {
-    authenticate: any
+    authenticate: any;
   }
 }
 
@@ -26,8 +27,13 @@ fastify.register(jwt, {
   },
 });
 
-fastify.register(articleRoute);
-fastify.register(userRoute);
+fastify.register((fastify, options) =>
+  articleRoute(fastify, options, "/articles")
+);
+fastify.register((fastify, options) => userRoute(fastify, options, "/users"));
+fastify.register((fastify, options) =>
+  commentRoute(fastify, options, "/comments")
+);
 
 fastify.decorate(
   "authenticate",
