@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import {  PrismaClient } from "@prisma/client";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { UserSchemaType } from "../models/userSchema";
+import { UserSchemaType, UserSchemaTypeDto } from "../models/userSchema";
 import { hashPassword } from "../utils/hashPassword";
 import { comparePassword } from "../utils/comparePassword";
 import ms from "ms";
@@ -9,7 +9,7 @@ import { generateSalt } from "../utils/generateSalt";
 const prisma = new PrismaClient();
 
 async function registerUser(
-  req: FastifyRequest<{ Body: UserSchemaType }>,
+  req: FastifyRequest<{ Body: UserSchemaTypeDto }>,
   reply: FastifyReply,
   fastify: FastifyInstance
 ) {
@@ -41,7 +41,10 @@ async function loginUser(
     where: { email },
   });
 
-  if (!user || !(await comparePassword(password, user.password, String(user.salt)))) {
+  if (
+    !user ||
+    !(await comparePassword(password, user.password, String(user.salt)))
+  ) {
     reply.code(401).send({ message: "Invalid credentials" });
     return;
   }
@@ -83,23 +86,30 @@ async function getUserProfile(req: FastifyRequest, reply: FastifyReply) {
 }
 
 async function updateUserProfile(
-  req: FastifyRequest<{ Body: UserSchemaType }>,
-  reply: FastifyReply
+  req: FastifyRequest<{ Body: Partial<UserSchemaType> }>,
+  reply: FastifyReply,
+  fastify: FastifyInstance
 ) {
-  const { email, password } = req.body;
-
-  const { hash: hashedPassword } = await hashPassword(password);
+  if (req.body.password) {
+    req.body.password = (await hashPassword(req.body.password)).hash;
+  }
 
   const updatedUser = await prisma.user.update({
-    where: { email },
-    data: {
-      password: hashedPassword,
-    },
+    where: { id: (req.user as any).id },
+    data: req.body,
   });
 
-  reply.code(200).send(updatedUser);
-}
+  const accessToken = fastify.jwt.sign({
+    id: updatedUser.id,
+    email: updatedUser.email,
+  });
+  const refreshToken = fastify.jwt.sign(
+    { id: updatedUser.id },
+    { expiresIn: ms("7d") }
+  );
 
+  reply.code(200).send({ ...updatedUser, accessToken, refreshToken });
+}
 export {
   registerUser,
   loginUser,

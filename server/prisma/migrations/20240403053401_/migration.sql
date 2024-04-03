@@ -6,7 +6,9 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
-    "role" "Role" NOT NULL,
+    "salt" TEXT,
+    "password" TEXT NOT NULL,
+    "role" "Role" DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -17,6 +19,8 @@ CREATE TABLE "Article" (
     "title" TEXT NOT NULL,
     "text" TEXT NOT NULL,
     "authorId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Article_pkey" PRIMARY KEY ("id")
 );
@@ -27,6 +31,8 @@ CREATE TABLE "Comment" (
     "text" TEXT NOT NULL,
     "authorId" INTEGER NOT NULL,
     "articleId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );

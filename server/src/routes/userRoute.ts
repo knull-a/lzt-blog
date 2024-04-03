@@ -1,5 +1,11 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { UserSchema, UserSchemaType } from "../models/userSchema";
+import {
+  UserSchema,
+  UserSchemaDto,
+  UserSchemaType,
+  UserSchemaTypeDto,
+  UserSchemaWithTokens,
+} from "../models/userSchema";
 import {
   getUserProfile,
   loginUser,
@@ -14,13 +20,13 @@ async function userRoute(fastify: FastifyInstance) {
     "/users/register",
     {
       schema: {
-        body: UserSchema,
+        body: UserSchemaDto,
         response: {
           200: UserSchema,
         },
       },
     },
-    (req: FastifyRequest<{ Body: UserSchemaType }>, rep) =>
+    (req: FastifyRequest<{ Body: UserSchemaTypeDto }>, rep) =>
       registerUser(req, rep, fastify)
   );
 
@@ -60,14 +66,20 @@ async function userRoute(fastify: FastifyInstance) {
     getUserProfile
   );
 
-  // fastify.patch(
-  //   "/users/me",
-  //   {
-  //     preHandler: [fastify.authenticate],
-  //     schema: UserSchema,
-  //   },
-  //   updateUserProfile
-  // );
+  fastify.patch(
+    "/users/me",
+    {
+      preHandler: [fastify.authenticate],
+      schema: {
+        body: Type.Partial(UserSchemaDto),
+        response: {
+          201: Type.Partial(UserSchemaWithTokens),
+        },
+      },
+    },
+    (req: FastifyRequest<{ Body: Partial<UserSchemaType> }>, rep) =>
+      updateUserProfile(req, rep, fastify)
+  );
 }
 
 export default userRoute;

@@ -1,11 +1,23 @@
 import { Static, Type } from "@sinclair/typebox";
+import { UserSchema } from "./userSchema";
 
-export const ArticleSchema = Type.Object({
+export const ArticleSchemaDto = Type.Object({
   title: Type.String(),
   text: Type.String(),
+});
+
+export const ArticleSchema = Type.Object({
+  id: Type.Number(),
+  title: Type.String(),
+  text: Type.String(),
+  author: UserSchema,
+  updatedAt: Type.String(),
+  createdAt: Type.String(),
+  comments: Type.Any(),
 });
 
 export const ArticleSchemaList = Type.Array(ArticleSchema);
 
 export type ArticleSchemaListType = Static<typeof ArticleSchemaList>;
 export type ArticleSchemaType = Static<typeof ArticleSchema>;
+export type ArticleSchemaDtoType = Static<typeof ArticleSchemaDto>;

@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { IdSchemaType } from "../models/idSchema";
-import { ArticleSchemaType } from "../models/articleSchema";
+import {
+  ArticleSchemaDtoType,
+  ArticleSchemaType,
+} from "../models/articleSchema";
 import { PaginationSchemaType } from "../models/paginationSchema";
 
 const prisma = new PrismaClient();
@@ -16,7 +19,7 @@ async function getArticles(
   const articles = await prisma.article.findMany({
     skip,
     take: limit,
-    include: { author: true },
+    include: { author: true, comments: true },
   });
 
   reply.code(200).send(articles);
@@ -29,7 +32,7 @@ async function getArticleById(
   const { id } = req.params;
 
   const article = await prisma.article.findUnique({
-    where: { id: Number(id) },
+    where: { id },
     include: { author: true, comments: true },
   });
 
@@ -42,14 +45,14 @@ async function getArticleById(
 }
 
 async function createArticle(
-  req: FastifyRequest<{ Body: ArticleSchemaType }>,
+  req: FastifyRequest<{ Body: ArticleSchemaDtoType; Reply: ArticleSchemaType }>,
   reply: FastifyReply
 ) {
   const { title, text } = req.body;
   const authorId = (req.user as any).id;
 
   const article = await prisma.article.create({
-    data: { title, text, authorId },
+    data: { title, text, authorId }
   });
 
   reply.code(201).send(article);

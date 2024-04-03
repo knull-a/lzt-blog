@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { ArticleSchema, ArticleSchemaList } from "../models/articleSchema";
+import { ArticleSchema, ArticleSchemaDto, ArticleSchemaList } from "../models/articleSchema";
 import { idSchema } from "../models/idSchema";
 import {
   createArticle,
@@ -44,9 +44,9 @@ async function articleRoute(
     "/articles",
     {
       schema: {
-        body: ArticleSchema,
+        body: ArticleSchemaDto,
         response: {
-          201: ArticleSchema,
+          201: ArticleSchemaDto,
         },
       },
       preHandler: [fastify.authenticate],
@@ -58,10 +58,10 @@ async function articleRoute(
     "/articles/:id",
     {
       schema: {
-        body: Type.Partial(ArticleSchema),
+        body: Type.Partial(ArticleSchemaDto),
         params: idSchema,
         response: {
-          201: ArticleSchema,
+          201: ArticleSchemaDto,
         },
       },
       preHandler: [fastify.authenticate],
