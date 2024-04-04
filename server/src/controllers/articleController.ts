@@ -49,10 +49,10 @@ async function createArticle(
   reply: FastifyReply
 ) {
   const { title, text } = req.body;
-  const authorId = (req.user as any).id;
+  const authorId = req.user.id;
 
   const article = await prisma.article.create({
-    data: { title, text, authorId }
+    data: { title, text, authorId },
   });
 
   reply.code(201).send(article);

@@ -34,7 +34,7 @@ async function userRoute(fastify: FastifyInstance, options: FastifyPluginOptions
     `${path}/login`,
     {
       schema: {
-        body: UserSchema,
+        body: UserSchemaDto,
         response: {
           200: UserSchema,
         },

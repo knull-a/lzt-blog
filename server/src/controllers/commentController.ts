@@ -22,7 +22,7 @@ async function createComment(
   const { text, articleId } = req.body;
 
   const comment = await prisma.comment.create({
-    data: { text, articleId, authorId: (req.user as any).id },
+    data: { text, articleId, authorId: req.user.id },
   });
 
   rep.code(201).send(comment);

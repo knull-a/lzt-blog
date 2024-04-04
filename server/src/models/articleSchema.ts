@@ -1,5 +1,6 @@
 import { Static, Type } from "@sinclair/typebox";
 import { UserSchema } from "./userSchema";
+import { CommentSchemaWithoutAuthor } from "./commentSchema";
 
 export const ArticleSchemaDto = Type.Object({
   title: Type.String(),
@@ -13,7 +14,7 @@ export const ArticleSchema = Type.Object({
   author: UserSchema,
   updatedAt: Type.String(),
   createdAt: Type.String(),
-  comments: Type.Any(),
+  comments: CommentSchemaWithoutAuthor,
 });
 
 export const ArticleSchemaList = Type.Array(ArticleSchema);

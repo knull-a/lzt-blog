@@ -1,4 +1,4 @@
-import {  PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { UserSchemaType, UserSchemaTypeDto } from "../models/userSchema";
 import { hashPassword } from "../utils/hashPassword";
@@ -95,7 +95,7 @@ async function updateUserProfile(
   }
 
   const updatedUser = await prisma.user.update({
-    where: { id: (req.user as any).id },
+    where: { id: req.user.id },
     data: req.body,
   });
 
