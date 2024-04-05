@@ -25,8 +25,7 @@ async function commentRoute(
         response: {
           200: CommentSchemaList,
         },
-      },
-      preHandler: [fastify.authenticate],
+      }
     },
     getComments
   );

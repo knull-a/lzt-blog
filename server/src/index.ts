@@ -1,6 +1,7 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import dotenv from "dotenv";
 import ms from "ms";
+import cors from "@fastify/cors";
 import articleRoute from "./routes/articleRoute";
 import jwt from "@fastify/jwt";
 import userRoute from "./routes/userRoute";
@@ -24,11 +25,16 @@ declare module "@fastify/jwt" {
 
 dotenv.config();
 
-const { PORT } = process.env;
+const { PORT, CLIENT_URL } = process.env;
 
 const fastify = Fastify({
   logger: true,
 });
+
+fastify.register(cors, {
+  credentials: true,
+  origin: '*'
+})
 
 fastify.register(jwt, {
   secret: process.env.JWT_SECRET!,

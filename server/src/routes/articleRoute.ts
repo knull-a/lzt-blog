@@ -8,6 +8,7 @@ import {
   updateArticle,
 } from "../controllers/articleController";
 import { Type } from "@sinclair/typebox";
+import { paginationSchema } from "../models/paginationSchema";
 
 async function articleRoute(
   fastify: FastifyInstance,
@@ -21,8 +22,8 @@ async function articleRoute(
         response: {
           200: ArticleSchemaList,
         },
-      },
-      preHandler: [fastify.authenticate],
+        querystring: paginationSchema
+      }
     },
     getArticles
   );
@@ -35,8 +36,7 @@ async function articleRoute(
           200: ArticleSchema,
         },
         params: idSchema,
-      },
-      preHandler: [fastify.authenticate],
+      }
     },
     getArticleById
   );

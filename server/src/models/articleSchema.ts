@@ -14,7 +14,7 @@ export const ArticleSchema = Type.Object({
   author: UserSchema,
   updatedAt: Type.String(),
   createdAt: Type.String(),
-  comments: CommentSchemaWithoutAuthor,
+  comments: Type.Array(CommentSchemaWithoutAuthor)
 });
 
 export const ArticleSchemaList = Type.Array(ArticleSchema);

@@ -1,8 +1,8 @@
 import { Static, Type } from "@sinclair/typebox";
 
 export const paginationSchema = Type.Object({
-  page: Type.Number(),
-  limit: Type.Number(),
+  page: Type.Optional(Type.Number()),
+  limit: Type.Optional(Type.Number()),
 });
 
 export type PaginationSchemaType = Static<typeof paginationSchema>;
