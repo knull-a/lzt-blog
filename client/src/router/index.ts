@@ -21,6 +21,11 @@ const router = createRouter({
       path: '/admin',
       name: 'Admin Panel',
       component: () => import('../pages/AdminPage.vue')
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../pages/LoginPage.vue')
     }
   ]
 })

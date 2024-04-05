@@ -17,7 +17,7 @@ const validationSchema = {
   text: yup.string().required()
 }
 
-const { handleSubmit } = useForm<CommentDto>({
+const { handleSubmit, resetForm } = useForm<CommentDto>({
   validationSchema
 })
 
@@ -31,6 +31,7 @@ const onSubmit = handleSubmit(async (values) => {
       articleId
     })
     if (getArticle !== undefined) await getArticle()
+    resetForm()
   } catch (error) {
     console.error(error)
   } finally {

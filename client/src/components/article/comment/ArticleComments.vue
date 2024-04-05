@@ -2,12 +2,15 @@
 import type { CommentData } from '@/services/comment/types'
 import ArticleCommentsItem from './ArticleCommentsItem.vue'
 import ArticleCommentsItemAdd from './ArticleCommentsItemAdd.vue';
+import { useUserStore } from '@/store/userStore';
 
 type Props = {
   comments: CommentData[]
 }
 
 defineProps<Props>()
+
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -15,7 +18,7 @@ defineProps<Props>()
     <h2 class="text-xl font-bold mb-4">Comments</h2>
     <div class="flex flex-col gap-4">
       <ArticleCommentsItem :comment v-for="comment in comments" :key="comment.id" />
-      <ArticleCommentsItemAdd />
+      <ArticleCommentsItemAdd v-if="userStore.isAuthenticated" />
     </div>
   </div>
 </template>

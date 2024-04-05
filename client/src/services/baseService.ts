@@ -24,7 +24,7 @@ export class BaseService {
         const accessToken = localStorage.getItem('access_token')
         return Object.assign(config, {
           headers: {
-            Authorization: accessToken ? `JWT ${accessToken}` : undefined
+            Authorization: accessToken ? `Bearer ${accessToken}` : undefined
           }
         })
       },

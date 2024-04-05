@@ -12,10 +12,6 @@ const props = defineProps<{
 
 const { errorMessage, handleBlur, handleChange, value } = useField<string>(props.name ?? '')
 
-// const modelValue = useVModel(props, 'modelValue', emits, {
-//   passive: true,
-//   defaultValue: props.defaultValue
-// })
 </script>
 
 <template>

@@ -17,7 +17,7 @@ const timeAgo = new TimeAgo('ru-RU')
 <template>
   <div>
     <div class="flex gap-2 items-center">
-      <b>{{ comment.authorId }}</b>
+      <b>userId:{{ comment.authorId }}</b>
       <span class="text-gray-500 text-sm">{{ timeAgo.format(new Date(comment.createdAt)) }}</span>
     </div>
     <p class="pr-12">{{ comment.text }}</p>
