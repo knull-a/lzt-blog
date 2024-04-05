@@ -5,3 +5,8 @@ declare module "axios" {
     retry?: boolean;
   }
 }
+
+export type PaginationType = {
+  limit?: number
+  start?: number
+}
