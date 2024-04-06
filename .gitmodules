@@ -1,0 +1,3 @@
+[submodule "client/deploy"]
+	path = client/deploy
+	url = git@github.com:knull-a/frontend-deploy.git

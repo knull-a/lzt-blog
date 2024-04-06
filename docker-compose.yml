@@ -1,0 +1,21 @@
+version: '3.8'
+
+networks:
+  default: {}
+
+services:
+  front-end:
+    container_name: front-end
+    build:
+      context: client
+      dockerfile: deploy/Dockerfile
+    ports:
+      - 8080:80
+  back-end:
+    container_name: back-end
+    build:
+      context: server
+      dockerfile: deploy/Dockerfile
+    ports:
+      - 8000:8000
+  

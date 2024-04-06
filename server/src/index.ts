@@ -33,8 +33,8 @@ const fastify = Fastify({
 
 fastify.register(cors, {
   credentials: true,
-  origin: '*'
-})
+  origin: "*",
+});
 
 fastify.register(jwt, {
   secret: process.env.JWT_SECRET!,
@@ -63,7 +63,7 @@ fastify.decorate(
 );
 
 try {
-  fastify.listen({ port: Number(PORT) || 8000 });
+  fastify.listen({ port: Number(PORT) || 8000, host: "0.0.0.0" });
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
