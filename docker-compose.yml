@@ -9,6 +9,8 @@ services:
     build:
       context: client
       dockerfile: deploy/Dockerfile
+    volumes: 
+        - ./client/.env:/app/.env
     ports:
       - 8080:80
   back-end:
@@ -16,6 +18,8 @@ services:
     build:
       context: server
       dockerfile: deploy/Dockerfile
+    volumes: 
+        - ./server/.env:/app/.env
     ports:
       - 8000:8000
   
