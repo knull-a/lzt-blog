@@ -4,10 +4,11 @@ import LogoTextIcon from '@/components/icons/LogoITextcon.vue'
 import { LogIn, LogOut } from 'lucide-vue-next'
 import { useUserStore } from '@/store/userStore'
 import { onMounted } from 'vue'
-import user from '@/services/user'
 import router from '@/router'
+import { useMediaQuery } from '@vueuse/core'
 
 const userStore = useUserStore()
+const isMobile = useMediaQuery('(max-width: 425px)')
 
 const routes = [
   {
@@ -53,7 +54,9 @@ onMounted(userStore.initialize)
       </RouterLink>
       <Button v-else variant="outline" @click="logout">
         <LogOut class="mr-2 w-4 h-4" />
-        {{ userStore.email }}
+        <span v-if="!isMobile">
+          {{ userStore.email }}
+        </span>
       </Button>
     </div>
   </div>

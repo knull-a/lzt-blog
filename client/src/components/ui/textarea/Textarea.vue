@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-import { useVModel } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { useField } from 'vee-validate'
 
@@ -10,8 +9,13 @@ const props = defineProps<{
   name?: string
 }>()
 
-const { errorMessage, handleBlur, handleChange, value } = useField<string>(props.name ?? '')
-
+const { errorMessage, handleBlur, handleChange, value } = useField<string>(
+  props.name ?? '',
+  {},
+  {
+    initialValue: (props.defaultValue as string) || ''
+  }
+)
 </script>
 
 <template>

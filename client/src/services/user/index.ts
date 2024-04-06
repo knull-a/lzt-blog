@@ -1,5 +1,5 @@
 import { BaseService } from '../baseService'
-import type { UserMe, UserData, UserDto } from './types'
+import type { UserMe, UserData, UserDto, AuthorData } from './types'
 
 class UserService extends BaseService {
   register(data: UserDto) {
@@ -12,6 +12,14 @@ class UserService extends BaseService {
 
   getUserMe() {
     return this.getData<UserMe>({ url: '/users/me' })
+  }
+
+  getUsers() {
+    return this.getData<AuthorData[]>({ url: '/users' })
+  }
+
+  deleteUser(id: number) {
+    return this.deleteData({ url: `/users/${id}` })
   }
 
   // todo: add user editing
