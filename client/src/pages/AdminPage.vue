@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AuthorData } from '@/services/user/types'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import UserService from '@/services/user'
 import ArticleService from '@/services/article'
 import LayoutSection from '@/components/layout/LayoutSection.vue'
@@ -22,6 +22,8 @@ import DialogClose from '@/components/ui/dialog/DialogClose.vue'
 import Textarea from '@/components/ui/textarea/Textarea.vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
+import { useUserStore } from '@/store/userStore'
+import router from '@/router'
 
 const users = ref<AuthorData[]>()
 const articles = ref<ArticleData[]>()
@@ -33,6 +35,8 @@ const { handleSubmit } = useForm<ArticleDataDto>({
     text: yup.string().required()
   }
 })
+
+const userStore = useUserStore()
 
 async function getArticles() {
   articles.value = await ArticleService.getArticles({limit: 100})
@@ -47,6 +51,11 @@ const onSubmit = handleSubmit(async (values) => {
 onMounted(async () => {
   users.value = await UserService.getUsers()
   await getArticles()
+})
+
+onBeforeMount(() => {
+  if (!userStore.isAuthenticated) router.replace('/login')
+  if (userStore.role !== 'ADMIN') router.replace('/')
 })
 </script>
 

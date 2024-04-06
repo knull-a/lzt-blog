@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { useUserStore } from '@/store/userStore'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useForm } from 'vee-validate'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import * as yup from 'yup'
 import type { UserDto } from '@/services/user/types'
 import { useRouter } from 'vue-router'
@@ -20,6 +14,7 @@ const currentLoginState = ref<'sign in' | 'sign up'>('sign in')
 
 const router = useRouter()
 const authStore = useUserStore()
+const userStore = useUserStore()
 
 const validationSchema = {
   email: yup.string().required().email().max(20),
@@ -35,6 +30,10 @@ const onSubmit = handleSubmit(async (values) => {
     ? await authStore.signIn(values)
     : await authStore.signUp(values)
   router.replace('/admin')
+})
+
+onBeforeMount(() => {
+  if (userStore.isAuthenticated) router.replace('/')
 })
 </script>
 

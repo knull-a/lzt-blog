@@ -26,7 +26,7 @@ onMounted(async () => {
 
 <template>
   <main>
-    <div class="flex flex-col gap-4">
+    <div v-if="articles?.length" class="flex flex-col gap-4">
       <RouterLink
         class="border p-4 rounded-md"
         :to="`/articles/${article.id}`"
@@ -37,9 +37,13 @@ onMounted(async () => {
       </RouterLink>
     </div>
 
+    <div v-else>
+      No articles. Page is empty.
+    </div>
+
     <Pagination
       class="mt-4 m-auto justify-center flex"
-      v-if="articles"
+      v-if="articles && articles.length >= 10"
       v-slot="{ page }"
       :total="100"
       :sibling-count="1"
