@@ -117,7 +117,7 @@ onMounted(getArticle)
       </div>
 
       <div>
-        <ArticleComments v-if="article.comments.length" :comments="article.comments" />
+        <ArticleComments :article />
       </div>
     </div>
   </template>

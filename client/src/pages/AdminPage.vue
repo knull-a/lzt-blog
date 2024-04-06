@@ -54,8 +54,7 @@ onMounted(async () => {
 })
 
 onBeforeMount(() => {
-  if (!userStore.isAuthenticated) router.replace('/login')
-  if (userStore.role !== 'ADMIN') router.replace('/')
+  if (userStore.role !== 'ADMIN') router.replace('/login')
 })
 </script>
 
