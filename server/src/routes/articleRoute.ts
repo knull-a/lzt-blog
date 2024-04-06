@@ -1,8 +1,13 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { ArticleSchema, ArticleSchemaDto, ArticleSchemaList } from "../models/articleSchema";
+import {
+  ArticleSchema,
+  ArticleSchemaDto,
+  ArticleSchemaList,
+} from "../models/articleSchema";
 import { idSchema } from "../models/idSchema";
 import {
   createArticle,
+  deleteArticle,
   getArticleById,
   getArticles,
   updateArticle,
@@ -22,8 +27,8 @@ async function articleRoute(
         response: {
           200: ArticleSchemaList,
         },
-        querystring: paginationSchema
-      }
+        querystring: paginationSchema,
+      },
     },
     getArticles
   );
@@ -36,7 +41,7 @@ async function articleRoute(
           200: ArticleSchema,
         },
         params: idSchema,
-      }
+      },
     },
     getArticleById
   );
@@ -68,6 +73,20 @@ async function articleRoute(
       preHandler: [fastify.authenticate],
     },
     updateArticle
+  );
+
+  fastify.delete(
+    `${path}/:id`,
+    {
+      preHandler: [fastify.authenticate],
+      schema: {
+        response: {
+          200: Type.String(),
+        },
+        params: idSchema
+      },
+    },
+    deleteArticle
   );
 }
 

@@ -5,6 +5,7 @@ import { hashPassword } from "../utils/hashPassword";
 import { comparePassword } from "../utils/comparePassword";
 import ms from "ms";
 import { generateSalt } from "../utils/generateSalt";
+import { IdSchemaType } from "../models/idSchema";
 
 const prisma = new PrismaClient();
 
@@ -80,9 +81,17 @@ async function refreshToken(
 }
 
 async function getUserProfile(req: FastifyRequest, reply: FastifyReply) {
-  const { user } = req;
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+  });
 
   reply.code(200).send(user);
+}
+
+async function getUsers(req: FastifyRequest, reply: FastifyReply) {
+  const users = await prisma.user.findMany();
+
+  reply.code(200).send(users);
 }
 
 async function updateUserProfile(
@@ -110,10 +119,23 @@ async function updateUserProfile(
 
   reply.code(200).send({ ...updatedUser, accessToken, refreshToken });
 }
+
+async function deleteUser(
+  req: FastifyRequest<{ Params: IdSchemaType }>,
+  reply: FastifyReply
+) {
+  const { id } = req.params;
+  await prisma.user.delete({ where: { id } });
+
+  reply.code(200).send("Success");
+}
+
 export {
   registerUser,
   loginUser,
   refreshToken,
   getUserProfile,
   updateUserProfile,
+  getUsers,
+  deleteUser
 };

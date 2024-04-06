@@ -12,10 +12,18 @@ import {
   registerUser,
   refreshToken,
   updateUserProfile,
+  getUsers,
+  deleteUser,
 } from "../controllers/userController";
 import { Type } from "@sinclair/typebox";
+import { ArticleSchemaList } from "../models/articleSchema";
+import { idSchema } from "../models/idSchema";
 
-async function userRoute(fastify: FastifyInstance, options: FastifyPluginOptions, path: string) {
+async function userRoute(
+  fastify: FastifyInstance,
+  options: FastifyPluginOptions,
+  path: string
+) {
   fastify.post(
     `${path}/register`,
     {
@@ -79,6 +87,33 @@ async function userRoute(fastify: FastifyInstance, options: FastifyPluginOptions
     },
     (req: FastifyRequest<{ Body: Partial<UserSchemaType> }>, rep) =>
       updateUserProfile(req, rep, fastify)
+  );
+
+  fastify.get(
+    path,
+    {
+      preHandler: [fastify.authenticate],
+      schema: {
+        response: {
+          200: Type.Array(UserSchema),
+        },
+      },
+    },
+    getUsers
+  );
+
+  fastify.delete(
+    `${path}/:id`,
+    {
+      preHandler: [fastify.authenticate],
+      schema: {
+        response: {
+          200: Type.String(),
+        },
+        params: idSchema,
+      },
+    },
+    deleteUser
   );
 }
 

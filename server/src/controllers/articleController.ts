@@ -76,4 +76,20 @@ async function updateArticle(
   reply.code(200).send(article);
 }
 
-export { getArticles, getArticleById, createArticle, updateArticle };
+async function deleteArticle(
+  req: FastifyRequest<{ Params: IdSchemaType }>,
+  reply: FastifyReply
+) {
+  const { id } = req.params;
+  await prisma.article.delete({ where: { id } });
+
+  reply.code(200).send("Success");
+}
+
+export {
+  getArticles,
+  getArticleById,
+  createArticle,
+  updateArticle,
+  deleteArticle,
+};
